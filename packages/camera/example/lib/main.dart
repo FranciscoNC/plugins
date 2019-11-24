@@ -106,12 +106,12 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
             // Attempt to take a picture and log where it's been saved.
             var result = await _controller.getPicture();
-            Image image = Image.memory(result);
+            
 
             // If the picture was taken, display it on a new screen.
             
             Navigator.push(context,MaterialPageRoute<void>(
-                builder: (context) => DisplayPictureScreen(imagePath: image),
+                builder: (context) => DisplayPictureScreen(imagePath: result),
               ),
             );
           } catch (e) {
