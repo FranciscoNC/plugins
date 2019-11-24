@@ -77,6 +77,11 @@ final class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
           camera.takePicture(call.argument("path"), result);
           break;
         }
+        case "getPicture":
+        {
+          camera.getPicture(result);
+          break;
+        }
       case "prepareForVideoRecording":
         {
           // This optimization is not required for Android.

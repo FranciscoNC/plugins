@@ -22,6 +22,7 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.media.MediaRecorder;
 import android.os.Build;
+import android.util.Log;
 import android.util.Size;
 import android.view.OrientationEventListener;
 import android.view.Surface;
@@ -228,51 +229,105 @@ public class Camera {
 
     if (file.exists()) {
       result.error(
-          "fileExists", "File at path '" + filePath + "' already exists. Cannot overwrite.", null);
+              "fileExists", "File at path '" + filePath + "' already exists. Cannot overwrite.", null);
       return;
     }
 
     pictureImageReader.setOnImageAvailableListener(
-        reader -> {
-          try (Image image = reader.acquireLatestImage()) {
-            ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-            writeToFile(buffer, file);
-            result.success(null);
-          } catch (IOException e) {
-            result.error("IOError", "Failed saving image", null);
-          }
-        },
-        null);
+            reader -> {
+              try (Image image = reader.acquireLatestImage()) {
+                ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+                writeToFile(buffer, file);
+                result.success(null);
+              } catch (IOException e) {
+                result.error("IOError", "Failed saving image", null);
+              }
+            },
+            null);
 
     try {
       final CaptureRequest.Builder captureBuilder =
-          cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+              cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
       captureBuilder.addTarget(pictureImageReader.getSurface());
       captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getMediaOrientation());
 
       cameraCaptureSession.capture(
-          captureBuilder.build(),
-          new CameraCaptureSession.CaptureCallback() {
-            @Override
-            public void onCaptureFailed(
-                @NonNull CameraCaptureSession session,
-                @NonNull CaptureRequest request,
-                @NonNull CaptureFailure failure) {
-              String reason;
-              switch (failure.getReason()) {
-                case CaptureFailure.REASON_ERROR:
-                  reason = "An error happened in the framework";
-                  break;
-                case CaptureFailure.REASON_FLUSHED:
-                  reason = "The capture has failed due to an abortCaptures() call";
-                  break;
-                default:
-                  reason = "Unknown reason";
+              captureBuilder.build(),
+              new CameraCaptureSession.CaptureCallback() {
+                @Override
+                public void onCaptureFailed(
+                        @NonNull CameraCaptureSession session,
+                        @NonNull CaptureRequest request,
+                        @NonNull CaptureFailure failure) {
+                  String reason;
+                  switch (failure.getReason()) {
+                    case CaptureFailure.REASON_ERROR:
+                      reason = "An error happened in the framework";
+                      break;
+                    case CaptureFailure.REASON_FLUSHED:
+                      reason = "The capture has failed due to an abortCaptures() call";
+                      break;
+                    default:
+                      reason = "Unknown reason";
+                  }
+                  result.error("captureFailure", reason, null);
+                }
+              },
+              null);
+    } catch (CameraAccessException e) {
+      result.error("cameraAccess", e.getMessage(), null);
+    }
+  }
+
+  public void getPicture(@NonNull final Result result) {
+
+    pictureImageReader.setOnImageAvailableListener(
+            reader -> {
+
+              try (Image image = reader.acquireLatestImage()) {
+                ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+                if(buffer.hasArray()){
+                  result.success(buffer.array());
+                }else{
+                  byte[] arreglo = new byte[buffer.capacity()];
+                  buffer.get(arreglo);
+                  result.success(arreglo);
+                }
+              } catch (Exception e) {
+                result.error("Error", e.toString() + " " + e.getCause(), null);
               }
-              result.error("captureFailure", reason, null);
-            }
-          },
-          null);
+            },
+            null);
+
+    try {
+      final CaptureRequest.Builder captureBuilder =
+              cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+      captureBuilder.addTarget(pictureImageReader.getSurface());
+      captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getMediaOrientation());
+
+      cameraCaptureSession.capture(
+              captureBuilder.build(),
+              new CameraCaptureSession.CaptureCallback() {
+                @Override
+                public void onCaptureFailed(
+                        @NonNull CameraCaptureSession session,
+                        @NonNull CaptureRequest request,
+                        @NonNull CaptureFailure failure) {
+                  String reason;
+                  switch (failure.getReason()) {
+                    case CaptureFailure.REASON_ERROR:
+                      reason = "An error happened in the framework";
+                      break;
+                    case CaptureFailure.REASON_FLUSHED:
+                      reason = "The capture has failed due to an abortCaptures() call";
+                      break;
+                    default:
+                      reason = "Unknown reason";
+                  }
+                  result.error("captureFailure", reason, null);
+                }
+              },
+              null);
     } catch (CameraAccessException e) {
       result.error("cameraAccess", e.getMessage(), null);
     }
