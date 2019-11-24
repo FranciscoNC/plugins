@@ -368,7 +368,7 @@ class CameraController extends ValueNotifier<CameraValue> {
   /// Captures an image and returns it to app.
   ///
   /// Throws a [CameraException] if the capture fails.
-  Future<Uint8List> getPicture() async {
+  Future<Image> getPicture() async {
     if (!value.isInitialized || _isDisposed) {
       throw CameraException(
         'Uninitialized CameraController.',
@@ -388,7 +388,8 @@ class CameraController extends ValueNotifier<CameraValue> {
         <String, dynamic>{'textureId': _textureId},
       );
       value = value.copyWith(isTakingPicture: false);
-      return resultado;
+      return Image.memory(resultado);
+      //return resultado;
     } on PlatformException catch (e) {
       value = value.copyWith(isTakingPicture: false);
       throw CameraException(e.code, e.message);
