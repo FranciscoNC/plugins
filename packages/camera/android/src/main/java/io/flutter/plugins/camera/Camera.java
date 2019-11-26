@@ -213,7 +213,7 @@ public class Camera {
   }
 
   private void writeToFile(ByteBuffer buffer, File file) throws IOException {
-    try (FileOutputStream outputStream = new FileOutputStream(file)) {
+    try (FileOutputStream outputStream = new FileOutputStream(file,false)) {
       while (0 < buffer.remaining()) {
         outputStream.getChannel().write(buffer);
       }
@@ -227,11 +227,11 @@ public class Camera {
   public void takePicture(String filePath, @NonNull final Result result) {
     final File file = new File(filePath);
 
-    if (file.exists()) {
+    /*if (file.exists()) {
       result.error(
               "fileExists", "File at path '" + filePath + "' already exists. Cannot overwrite.", null);
       return;
-    }
+    }*/
 
     pictureImageReader.setOnImageAvailableListener(
             reader -> {
