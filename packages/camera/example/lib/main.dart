@@ -111,7 +111,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             // If the picture was taken, display it on a new screen.
             
             Navigator.push(context,MaterialPageRoute<void>(
-                builder: (context) => DisplayPictureScreen(imagePath: result),
+                builder: (context) => DisplayPictureScreen(imagePath: Image.memory(result)),
               ),
             );
           } catch (e) {
