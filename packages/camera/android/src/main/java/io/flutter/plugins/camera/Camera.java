@@ -115,8 +115,8 @@ public class Camera {
     ResolutionPreset preset = ResolutionPreset.valueOf(resolutionPreset);
     recordingProfile =
         CameraUtils.getBestAvailableCamcorderProfileForResolutionPreset(cameraName, preset);
-    captureSize = new Size(1920,1080);//1632,1224);//new Size(recordingProfile.videoFrameWidth, recordingProfile.videoFrameHeight);
-    previewSize = new Size(1920,1080);//1632,1224);//computeBestPreviewSize(cameraName, preset);
+    captureSize = new Size(1632,1224);//new Size(recordingProfile.videoFrameWidth, recordingProfile.videoFrameHeight);
+    previewSize = new Size(1632,1224);//computeBestPreviewSize(cameraName, preset);
     Log.i("******* Algo", previewSize.toString());
     Log.i("******* Algo", captureSize.toString());
   }
@@ -137,7 +137,7 @@ public class Camera {
     mediaRecorder.setVideoEncodingBitRate(recordingProfile.videoBitRate);
     if (enableAudio) mediaRecorder.setAudioSamplingRate(recordingProfile.audioSampleRate);
     mediaRecorder.setVideoFrameRate(recordingProfile.videoFrameRate);
-    mediaRecorder.setVideoSize(1920,1080);//1632,1224);//recordingProfile.videoFrameWidth, recordingProfile.videoFrameHeight);
+    mediaRecorder.setVideoSize(1632,1224);//recordingProfile.videoFrameWidth, recordingProfile.videoFrameHeight);
     mediaRecorder.setOutputFile(outputFilePath);
     mediaRecorder.setOrientationHint(getMediaOrientation());
 
