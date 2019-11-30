@@ -381,8 +381,13 @@ public class Camera {
               }
 
               //************************************************************
-              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
+              /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
                       CaptureRequest.CONTROL_AF_MODE_OFF);
+
+               */
+              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
+                      CameraMetadata.CONTROL_AF_TRIGGER_START);
+
               //************************************************************
 
               cameraCaptureSession = session;
@@ -402,6 +407,8 @@ public class Camera {
             dartMessenger.send(
                 DartMessenger.EventType.ERROR, "Failed to configure camera session.");
           }
+
+
         };
 
     // Collect all surfaces we want to render to.
