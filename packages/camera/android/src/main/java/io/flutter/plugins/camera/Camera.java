@@ -381,12 +381,12 @@ public class Camera {
               }
 
               //************************************************************
-              /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
+              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
                       CaptureRequest.CONTROL_AF_MODE_OFF);
 
-               */
-              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
-                      CameraMetadata.CONTROL_AF_TRIGGER_START);
+               
+              /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
+                      CameraMetadata.CONTROL_AF_TRIGGER_START);*/
 
               //************************************************************
 
