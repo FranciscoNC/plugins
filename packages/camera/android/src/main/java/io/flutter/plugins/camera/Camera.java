@@ -105,6 +105,8 @@ public class Camera {
     CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraName);
     StreamConfigurationMap streamConfigurationMap =
         characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+
+
     //noinspection ConstantConditions
     sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
     //noinspection ConstantConditions
@@ -115,6 +117,8 @@ public class Camera {
         CameraUtils.getBestAvailableCamcorderProfileForResolutionPreset(cameraName, preset);
     captureSize = new Size(recordingProfile.videoFrameWidth, recordingProfile.videoFrameHeight);
     previewSize = computeBestPreviewSize(cameraName, preset);
+    Log.i("******* Algo", previewSize.toString());
+    Log.i("******* Algo", captureSize.toString());
   }
 
   private void prepareMediaRecorder(String outputFilePath) throws IOException {
@@ -142,6 +146,7 @@ public class Camera {
 
   @SuppressLint("MissingPermission")
   public void open(@NonNull final Result result) throws CameraAccessException {
+
     pictureImageReader =
         ImageReader.newInstance(
             captureSize.getWidth(), captureSize.getHeight(), ImageFormat.JPEG, 2);
@@ -349,7 +354,9 @@ public class Camera {
 
     // Build Flutter surface to render to
     SurfaceTexture surfaceTexture = flutterTexture.surfaceTexture();
+
     surfaceTexture.setDefaultBufferSize(previewSize.getWidth(), previewSize.getHeight());
+
     Surface flutterSurface = new Surface(surfaceTexture);
     captureRequestBuilder.addTarget(flutterSurface);
 
@@ -372,6 +379,12 @@ public class Camera {
                     DartMessenger.EventType.ERROR, "The camera was closed during configuration.");
                 return;
               }
+
+              //************************************************************
+              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
+                      CaptureRequest.CONTROL_AF_MODE_OFF);
+              //************************************************************
+
               cameraCaptureSession = session;
               captureRequestBuilder.set(
                   CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
