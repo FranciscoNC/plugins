@@ -355,7 +355,7 @@ public class Camera {
     // Build Flutter surface to render to
     SurfaceTexture surfaceTexture = flutterTexture.surfaceTexture();
 
-    surfaceTexture.setDefaultBufferSize(previewSize.getWidth(), previewSize.getHeight());
+    surfaceTexture.setDefaultBufferSize(1536,2048/*previewSize.getWidth(), previewSize.getHeight()*/);
 
     Surface flutterSurface = new Surface(surfaceTexture);
     captureRequestBuilder.addTarget(flutterSurface);
@@ -384,7 +384,7 @@ public class Camera {
               captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
                       CaptureRequest.CONTROL_AF_MODE_OFF);
 
-               
+
               /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
                       CameraMetadata.CONTROL_AF_TRIGGER_START);*/
 
