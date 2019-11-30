@@ -359,7 +359,11 @@ public class Camera {
 
     StreamConfigurationMap streamConfigurationMap = descr.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
     Size[] sizes = streamConfigurationMap.getOutputSizes(SurfaceTexture.class);
-    Log.e(sizes.toString(), "createCaptureSession: ");
+
+    for (Size tam: sizes) {
+      Log.e(tam.getWidth() +  "x" + tam.getHeight(), "createCaptureSession: ");
+    }
+
 
     surfaceTexture.setDefaultBufferSize(1536,2048/*previewSize.getWidth(), previewSize.getHeight()*/);
 
