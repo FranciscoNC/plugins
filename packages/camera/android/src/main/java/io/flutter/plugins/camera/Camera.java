@@ -492,7 +492,9 @@ public class Camera {
 
               //************************************************************
               captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_OFF);
-              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
+              captureRequestBuilder.set(CaptureRequest.CONTROL_AWB_MODE,CaptureRequest.CONTROL_AWB_MODE_OFF);
+              //captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
+
 
               MeteringRectangle[] areas = captureRequestBuilder.get(CaptureRequest.CONTROL_AF_REGIONS);
               for (MeteringRectangle area:areas) {
