@@ -1,5 +1,6 @@
 package io.flutter.plugins.camera;
 
+import static android.hardware.camera2.params.MeteringRectangle.METERING_WEIGHT_DONT_CARE;
 import static android.view.OrientationEventListener.ORIENTATION_UNKNOWN;
 import static io.flutter.plugins.camera.CameraUtils.computeBestPreviewSize;
 
@@ -7,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.ImageFormat;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -316,8 +318,16 @@ public class Camera {
       captureBuilder.addTarget(pictureImageReader.getSurface());
       captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getMediaOrientation());
 
-      captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+      Rect newRect=new Rect(816,612,900,700);
+      MeteringRectangle[] meteringRectangle=new MeteringRectangle[1];
+      meteringRectangle[0]=new MeteringRectangle(newRect,METERING_WEIGHT_DONT_CARE);
+
+      captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_AUTO);
+      captureBuilder.set(CaptureRequest.CONTROL_AF_REGIONS,meteringRectangle);
       captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_START);
+
+
+
 
       cameraCaptureSession.capture(
               captureBuilder.build(),
