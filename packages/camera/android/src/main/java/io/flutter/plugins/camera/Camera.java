@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class Camera {
   private final SurfaceTextureEntry flutterTexture;
@@ -286,30 +287,7 @@ public class Camera {
 
   public void getPicture(@NonNull final Result result) {
 
-    CameraCharacteristics descr = null;
-    try {
-      descr = cameraManager.getCameraCharacteristics(cameraName);
-      float yourMinFocus = 0;
-      try{
-        yourMinFocus = descr.get(CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE);
-      }catch (Exception e){
-        Log.e(e.getMessage(), "createCaptureSession: ");
-      };
 
-      float yourMaxFocus = 0;
-
-      try{
-        yourMaxFocus = descr.get(CameraCharacteristics.LENS_INFO_HYPERFOCAL_DISTANCE);
-      }catch (Exception e){
-        Log.e(e.getMessage(), "createCaptureSession: ");
-      };
-
-      Log.e("MIN FOCUS: "+yourMinFocus, "createCaptureSession: ");
-      Log.e("MAX FOCUS: "+yourMaxFocus, "createCaptureSession: ");
-      
-    } catch (CameraAccessException e) {
-      e.printStackTrace();
-    }
 
 
 
@@ -384,6 +362,15 @@ public class Camera {
 
     CameraCharacteristics descr = cameraManager.getCameraCharacteristics(cameraName);
 
+    try {
+      int resultafoHadrware = descr.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
+      Log.e(resultafoHadrware+" ", "createCaptureSession: ");
+    }catch (Exception e){
+      Log.e(e.getMessage(), "createCaptureSession: ");
+    }
+
+
+
     StreamConfigurationMap streamConfigurationMap = descr.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
 
 
@@ -394,7 +381,6 @@ public class Camera {
 
     for (Size tam: sizes) {
       Log.e(tam.getWidth() +  "x" + tam.getHeight(), "createCaptureSession: ");
-
     }
 
 
