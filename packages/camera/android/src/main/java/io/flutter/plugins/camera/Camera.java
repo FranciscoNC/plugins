@@ -303,21 +303,40 @@ public class Camera {
         //captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE,CaptureRequest.CONTROL_AE_MODE_ON);
         cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
 
-        /*
-        wait(100);
 
+        wait(1000);
+
+        cameraCaptureSession.stopRepeating();
         captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
         captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,null);
-        cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);*/
+        cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
+
 
 
 
       }else{
+        Rect newRect=new Rect(0,0,3263,2447);
+        MeteringRectangle[] meteringRectangle=new MeteringRectangle[1];
+        meteringRectangle[0]=new MeteringRectangle(newRect,METERING_WEIGHT_DONT_CARE);
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, meteringRectangle);
+
+
         captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_IDLE);
-        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CaptureRequest.CONTROL_AF_TRIGGER_CANCEL);
-        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CaptureRequest.CONTROL_AF_TRIGGER_START);
+
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
         //captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE,CaptureRequest.CONTROL_AE_MODE_ON);
         cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
+
+
+        wait(1000);
+        cameraCaptureSession.stopRepeating();
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,null);
+        cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
+
+
+
       }
 
       result.success(null);
