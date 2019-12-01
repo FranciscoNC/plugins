@@ -420,7 +420,7 @@ public class Camera {
               captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
                       CaptureRequest.CONTROL_AF_MODE_OFF);
 
-              float val = 30;
+              float val = 1;
               captureRequestBuilder.set(CaptureRequest.LENS_FOCUS_DISTANCE, val);
 
 
