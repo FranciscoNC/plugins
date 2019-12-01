@@ -290,7 +290,7 @@ public class Camera {
 
   public void ajustarFoco(boolean cerca,@NonNull final Result result){
     try {
-      cameraCaptureSession.stopRepeating();
+      //cameraCaptureSession.stopRepeating();
       if(cerca){
         //Now add a new AF trigger with focus region
         /*Rect newRect=new Rect(816 - 100,612 - 100,816 + 200,612 + 200);
@@ -365,7 +365,7 @@ public class Camera {
 
 
 
-      captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_IDLE);
+      /*captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_IDLE);
       captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
 
       Rect newRect=new Rect(816 - 100,612 - 100,816 + 200,612 + 200);
@@ -382,7 +382,7 @@ public class Camera {
       captureBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, meteringRectangle);
       captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
       captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
-      captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
+      captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);*/
 
       cameraCaptureSession.capture(
               captureBuilder.build(),
@@ -393,10 +393,9 @@ public class Camera {
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
                   super.onCaptureCompleted(session, request, result);
 
-                  Log.i("HOLA *******", "*************************onCaptureCompleted: ");
-
-                  captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
-                  captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
+                  //Log.i("HOLA *******", "*************************onCaptureCompleted: ");
+                  /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
+                  captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);*/
                   try {
                     cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(), null, null);
                   }catch (Exception e){
@@ -447,38 +446,6 @@ public class Camera {
     // Build Flutter surface to render to
     SurfaceTexture surfaceTexture = flutterTexture.surfaceTexture();
 
-    CameraCharacteristics descr = cameraManager.getCameraCharacteristics(cameraName);
-
-    try {
-      int resultafoHadrware = descr.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
-
-
-      Log.e(resultafoHadrware+" ", "createCaptureSession: ");
-      float[] lensDistances = descr.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS);
-      for (float distance: lensDistances) {
-        Log.i(distance + " ", "createCaptureSession: ");
-      }
-
-    }catch (Exception e){
-      Log.e(e.getMessage(), "createCaptureSession: ");
-    }
-
-
-
-    StreamConfigurationMap streamConfigurationMap = descr.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-
-
-
-
-
-    Size[] sizes = streamConfigurationMap.getOutputSizes(SurfaceTexture.class);
-
-    for (Size tam: sizes) {
-      Log.e(tam.getWidth() +  "x" + tam.getHeight(), "createCaptureSession: ");
-    }
-
-
-
     surfaceTexture.setDefaultBufferSize(previewSize.getWidth(), previewSize.getHeight());
 
     Surface flutterSurface = new Surface(surfaceTexture);
@@ -505,23 +472,13 @@ public class Camera {
               }
 
               //************************************************************
+              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
               captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_OFF);
-              //captureRequestBuilder.set(CaptureRequest.CONTROL_AWB_MODE,CaptureRequest.CONTROL_AWB_MODE_OFF);
-              //captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
-
-
-              MeteringRectangle[] areas = captureRequestBuilder.get(CaptureRequest.CONTROL_AF_REGIONS);
-              for (MeteringRectangle area:areas) {
-                Log.i("("+area.getX()+","+area.getY()+"),"+area.getWidth()+"x"+area.getHeight(), "onConfigured: ");
-              }
-
-              /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
-                      CameraMetadata.CONTROL_AF_TRIGGER_START);*/
               //************************************************************
 
               cameraCaptureSession = session;
-              captureRequestBuilder.set(
-                  CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+              /*captureRequestBuilder.set(
+                  CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);*/
               cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(), null, null);
               if (onSuccessCallback != null) {
                 onSuccessCallback.run();
