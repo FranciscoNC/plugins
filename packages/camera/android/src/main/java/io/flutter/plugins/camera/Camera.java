@@ -394,6 +394,8 @@ public class Camera {
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
                   super.onCaptureCompleted(session, request, result);
 
+                  Log.i("HOLA *******", "*************************onCaptureCompleted: ");
+
                   captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
                   captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
                   try {
