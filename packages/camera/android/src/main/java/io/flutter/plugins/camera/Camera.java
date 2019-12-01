@@ -293,11 +293,13 @@ public class Camera {
       //cameraCaptureSession.stopRepeating();
       if(cerca){
         cameraCaptureSession.stopRepeating();
-        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
+        captureRequestBuilder.set(
+                CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
         cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
       }else{
         cameraCaptureSession.stopRepeating();
-        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
+        captureRequestBuilder.set(
+                CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_OFF);
         cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
       }
       result.success(null);
@@ -439,14 +441,14 @@ public class Camera {
 
               //************************************************************
               Log.i("Hola", "******** onConfigured: ");
-              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_IDLE);
-              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_AUTO);
+              /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_IDLE);
+              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_AUTO);*/
               //captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_OFF);
               //************************************************************
 
               cameraCaptureSession = session;
-              /*captureRequestBuilder.set(
-                  CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);*/
+              captureRequestBuilder.set(
+                  CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
               cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(), null, null);
               if (onSuccessCallback != null) {
                 onSuccessCallback.run();
