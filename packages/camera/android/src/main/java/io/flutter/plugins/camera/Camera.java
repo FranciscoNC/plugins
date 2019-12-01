@@ -423,9 +423,9 @@ public class Camera {
 
               //************************************************************
               captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
-                      CaptureRequest.CONTROL_AF_MODE_OFF);
-              MeteringRectangle[] areas = captureRequestBuilder.get(CaptureRequest.CONTROL_AF_REGIONS);
+                      CaptureRequest.CONTROL_AF_MODE_AUTO);
 
+              MeteringRectangle[] areas = captureRequestBuilder.get(CaptureRequest.CONTROL_AF_REGIONS);
               for (MeteringRectangle area:areas) {
                 Log.i("("+area.getX()+","+area.getY()+"),"+area.getWidth()+"x"+area.getHeight(), "onConfigured: ");
               }
