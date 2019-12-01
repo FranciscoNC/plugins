@@ -304,12 +304,7 @@ public class Camera {
         cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
 
 
-        wait(1000);
 
-        cameraCaptureSession.stopRepeating();
-        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
-        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,null);
-        cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
 
 
 
@@ -319,26 +314,17 @@ public class Camera {
         MeteringRectangle[] meteringRectangle=new MeteringRectangle[1];
         meteringRectangle[0]=new MeteringRectangle(newRect,METERING_WEIGHT_DONT_CARE);
         captureRequestBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, meteringRectangle);
-
-
         captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_IDLE);
         captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CaptureRequest.CONTROL_AF_TRIGGER_START);
-
         captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
-        //captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE,CaptureRequest.CONTROL_AE_MODE_ON);
         cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
 
 
-        wait(1000);
-        cameraCaptureSession.stopRepeating();
-        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
-        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,null);
-        cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
+
 
 
 
       }
-
       result.success(null);
 
     }catch (Exception e){
@@ -409,6 +395,7 @@ public class Camera {
                   super.onCaptureCompleted(session, request, result);
 
                   captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
+                  captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
                   try {
                     cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(), null, null);
                   }catch (Exception e){
