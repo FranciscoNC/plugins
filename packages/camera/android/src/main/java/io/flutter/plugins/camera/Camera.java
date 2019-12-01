@@ -286,6 +286,33 @@ public class Camera {
 
   public void getPicture(@NonNull final Result result) {
 
+    CameraCharacteristics descr = null;
+    try {
+      descr = cameraManager.getCameraCharacteristics(cameraName);
+      float yourMinFocus = 0;
+      try{
+        yourMinFocus = descr.get(CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE);
+      }catch (Exception e){
+        Log.e(e.getMessage(), "createCaptureSession: ");
+      };
+
+      float yourMaxFocus = 0;
+
+      try{
+        yourMaxFocus = descr.get(CameraCharacteristics.LENS_INFO_HYPERFOCAL_DISTANCE);
+      }catch (Exception e){
+        Log.e(e.getMessage(), "createCaptureSession: ");
+      };
+
+      Log.e("MIN FOCUS: "+yourMinFocus, "createCaptureSession: ");
+      Log.e("MAX FOCUS: "+yourMaxFocus, "createCaptureSession: ");
+      
+    } catch (CameraAccessException e) {
+      e.printStackTrace();
+    }
+
+
+
     pictureImageReader.setOnImageAvailableListener(
             reader -> {
 
@@ -359,20 +386,7 @@ public class Camera {
 
     StreamConfigurationMap streamConfigurationMap = descr.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
 
-    float yourMinFocus = 0;
-    try{
-      yourMinFocus = descr.get(CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE);
-    }catch (Exception e){
-      Log.e(e.getMessage(), "createCaptureSession: ");
-    };
 
-    float yourMaxFocus = 0;
-
-    try{
-      yourMaxFocus = descr.get(CameraCharacteristics.LENS_INFO_HYPERFOCAL_DISTANCE);
-    }catch (Exception e){
-      Log.e(e.getMessage(), "createCaptureSession: ");
-    };
 
 
 
@@ -382,8 +396,7 @@ public class Camera {
       Log.e(tam.getWidth() +  "x" + tam.getHeight(), "createCaptureSession: ");
 
     }
-    Log.e("MIN FOCUS: "+yourMinFocus, "createCaptureSession: ");
-    Log.e("MAX FOCUS: "+yourMaxFocus, "createCaptureSession: ");
+
 
 
     surfaceTexture.setDefaultBufferSize(previewSize.getWidth(), previewSize.getHeight());
@@ -412,8 +425,8 @@ public class Camera {
               }
 
               //************************************************************
-              /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
-                      CaptureRequest.CONTROL_AF_MODE_OFF);*/
+              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
+                      CaptureRequest.CONTROL_AF_MODE_OFF);
 
 
               /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
