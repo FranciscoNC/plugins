@@ -366,7 +366,7 @@ public class Camera {
 
     pictureImageReader.setOnImageAvailableListener(
             reader -> {
-              if(mState == STATE_WAITING_LOCK) return;
+
               try (Image image = reader.acquireLatestImage()) {
                 ByteBuffer buffer = image.getPlanes()[0].getBuffer();
                 if(buffer.hasArray()){
