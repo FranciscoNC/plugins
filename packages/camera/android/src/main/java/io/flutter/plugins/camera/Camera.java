@@ -358,11 +358,18 @@ public class Camera {
     CameraCharacteristics descr = cameraManager.getCameraCharacteristics(cameraName);
 
     StreamConfigurationMap streamConfigurationMap = descr.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+
+    float yourMinFocus = descr.get(CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE);
+    float yourMaxFocus = descr.get(CameraCharacteristics.LENS_INFO_HYPERFOCAL_DISTANCE);
+
     Size[] sizes = streamConfigurationMap.getOutputSizes(SurfaceTexture.class);
 
     for (Size tam: sizes) {
       Log.e(tam.getWidth() +  "x" + tam.getHeight(), "createCaptureSession: ");
+
     }
+    Log.e("MIN FOCUS: "+yourMinFocus, "createCaptureSession: ");
+    Log.e("MAX FOCUS: "+yourMaxFocus, "createCaptureSession: ");
 
 
     surfaceTexture.setDefaultBufferSize(previewSize.getWidth(), previewSize.getHeight());
@@ -397,6 +404,8 @@ public class Camera {
 
               /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
                       CameraMetadata.CONTROL_AF_TRIGGER_START);*/
+
+
 
               //************************************************************
 
