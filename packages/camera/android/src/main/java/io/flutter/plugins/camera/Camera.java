@@ -418,7 +418,7 @@ public class Camera {
 
               //************************************************************
               captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
-                      CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+                      CaptureRequest.CONTROL_AF_MODE_EDOF);
               /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
                       CameraMetadata.CONTROL_AF_TRIGGER_START);*/
               //************************************************************
