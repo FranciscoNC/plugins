@@ -360,7 +360,9 @@ public class Camera {
     }
   }
 
+  private boolean seEnvio = false;
   public void getPicture(@NonNull final Result result) {
+    seEnvio = false;
 
     pictureImageReader.setOnImageAvailableListener(
             reader -> {
@@ -368,14 +370,20 @@ public class Camera {
               try (Image image = reader.acquireLatestImage()) {
                 ByteBuffer buffer = image.getPlanes()[0].getBuffer();
                 if(buffer.hasArray()){
-                  result.success(buffer.array());
+
+                  if(!seEnvio)result.success(buffer.array());
+                  seEnvio = true;
                 }else{
+
                   byte[] arreglo = new byte[buffer.capacity()];
                   buffer.get(arreglo);
-                  result.success(arreglo);
+                  if(!seEnvio)result.success(arreglo);
+                  seEnvio = true;
                 }
               } catch (Exception e) {
-                result.error("Error", e.toString() + " " + e.getCause(), null);
+
+                if(!seEnvio)result.error("Error", e.toString() + " " + e.getCause(), null);
+                seEnvio = true;
               }
             },
             null);
