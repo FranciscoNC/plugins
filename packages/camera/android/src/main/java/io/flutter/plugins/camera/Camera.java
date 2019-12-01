@@ -292,7 +292,6 @@ public class Camera {
     try {
       cameraCaptureSession.stopRepeating();
       if(cerca){
-        cameraCaptureSession.stopRepeating();
         //Now add a new AF trigger with focus region
         Rect newRect=new Rect(816 - 100,612 - 100,816 + 200,612 + 200);
         MeteringRectangle[] meteringRectangle=new MeteringRectangle[1];
@@ -303,6 +302,14 @@ public class Camera {
         captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
         //captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE,CaptureRequest.CONTROL_AE_MODE_ON);
         cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
+
+        /*
+        wait(100);
+
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,null);
+        cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);*/
+
 
 
       }else{
@@ -492,7 +499,7 @@ public class Camera {
 
               //************************************************************
               captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_OFF);
-              captureRequestBuilder.set(CaptureRequest.CONTROL_AWB_MODE,CaptureRequest.CONTROL_AWB_MODE_OFF);
+              //captureRequestBuilder.set(CaptureRequest.CONTROL_AWB_MODE,CaptureRequest.CONTROL_AWB_MODE_OFF);
               //captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
 
 
