@@ -16,6 +16,8 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureFailure;
 import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.CaptureResult;
+import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.CamcorderProfile;
 import android.media.Image;
@@ -24,6 +26,7 @@ import android.media.MediaRecorder;
 import android.os.Build;
 import android.util.Log;
 import android.util.Size;
+import android.util.SparseIntArray;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import androidx.annotation.NonNull;
@@ -61,6 +64,79 @@ public class Camera {
   private boolean recordingVideo;
   private CamcorderProfile recordingProfile;
   private int currentOrientation = ORIENTATION_UNKNOWN;
+
+
+
+  private int mState = STATE_PREVIEW;
+  private static final int STATE_PREVIEW = 0;
+  private static final int STATE_WAITING_LOCK = 1;
+
+
+  /*private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+  static {
+    ORIENTATIONS.append(Surface.ROTATION_0, 90);
+    ORIENTATIONS.append(Surface.ROTATION_90, 0);
+    ORIENTATIONS.append(Surface.ROTATION_180, 270);
+    ORIENTATIONS.append(Surface.ROTATION_270, 180);
+  }
+
+  private int getOrientation(int rotation) {
+    // Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
+    // We have to take that into account and rotate JPEG properly.
+    // For devices with orientation of 90, we simply return our mapping from ORIENTATIONS.
+    // For devices with orientation of 270, we need to rotate the JPEG 180 degrees.
+    return (ORIENTATIONS.get(rotation) + mSensorOrientation + 270) % 360;
+  }
+
+  private void setAutoFlash(CaptureRequest.Builder requestBuilder) {
+    if (false) {
+      requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
+              CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
+    }
+  }
+
+  private void captureStillPicture() {
+    try {
+      final Activity activity = getActivity();
+      if (null == activity || null == cameraDevice) {
+        return;
+      }
+      // This is the CaptureRequest.Builder that we use to take a picture.
+      final CaptureRequest.Builder captureBuilder =
+              cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+      captureBuilder.addTarget(imageStreamReader.getSurface());
+
+      // Use the same AE and AF modes as the preview.
+      captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,
+              CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+      setAutoFlash(captureBuilder);
+
+      // Orientation
+      int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+      captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(rotation));
+
+      CameraCaptureSession.CaptureCallback CaptureCallback
+              = new CameraCaptureSession.CaptureCallback() {
+
+        @Override
+        public void onCaptureCompleted(@NonNull CameraCaptureSession session,
+                                       @NonNull CaptureRequest request,
+                                       @NonNull TotalCaptureResult result) {
+
+          unlockFocus();
+        }
+      };
+
+      cameraCaptureSession.stopRepeating();
+      cameraCaptureSession.abortCaptures();
+      cameraCaptureSession.capture(captureBuilder.build(), CaptureCallback, null);
+    } catch (CameraAccessException e) {
+      e.printStackTrace();
+    }
+  }*/
+
+
+
 
   // Mirrors camera.dart
   public enum ResolutionPreset {
@@ -304,39 +380,102 @@ public class Camera {
             },
             null);
 
+    lockFocus();
+  }
+
+  private CameraCaptureSession.CaptureCallback mSessionCaptureCallback = new CameraCaptureSession.CaptureCallback() {
+    private void process(CaptureResult result) {
+      switch (mState) {
+        case STATE_PREVIEW: {
+          // We have nothing to do when the camera preview is working normally.
+          break;
+        }
+        case STATE_WAITING_LOCK: {
+          Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
+          if(afState == CaptureRequest.CONTROL_AF_STATE_FOCUSED_LOCKED){
+            unlockFocus();
+            Log.i("Focus lock successful", "process: ");
+          }
+          break;
+        }
+      }
+    }
+
+    @Override
+    public void onCaptureStarted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, long timestamp, long frameNumber) {
+      super.onCaptureStarted(session, request, timestamp, frameNumber);
+    }
+
+    @Override
+    public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
+      super.onCaptureCompleted(session, request, result);
+      process(result);
+    }
+
+    @Override
+    public void onCaptureFailed(
+            @NonNull CameraCaptureSession session,
+            @NonNull CaptureRequest request,
+            @NonNull CaptureFailure failure) {
+
+      Log.e("Focus lock Unsuccessful", "process: ");
+      String reason;
+      switch (failure.getReason()) {
+        case CaptureFailure.REASON_ERROR:
+          reason = "An error happened in the framework";
+          break;
+        case CaptureFailure.REASON_FLUSHED:
+          reason = "The capture has failed due to an abortCaptures() call";
+          break;
+        default:
+          reason = "Unknown reason";
+      }
+      //result.error("captureFailure", reason, null);
+    }
+  };
+
+  private void lockFocus(){
     try {
       final CaptureRequest.Builder captureBuilder =
               cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
       captureBuilder.addTarget(pictureImageReader.getSurface());
       captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getMediaOrientation());
 
+      mState = STATE_WAITING_LOCK;
+      captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_AUTO);
+      captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_START);
+
+
       cameraCaptureSession.capture(
               captureBuilder.build(),
-              new CameraCaptureSession.CaptureCallback() {
-                @Override
-                public void onCaptureFailed(
-                        @NonNull CameraCaptureSession session,
-                        @NonNull CaptureRequest request,
-                        @NonNull CaptureFailure failure) {
-                  String reason;
-                  switch (failure.getReason()) {
-                    case CaptureFailure.REASON_ERROR:
-                      reason = "An error happened in the framework";
-                      break;
-                    case CaptureFailure.REASON_FLUSHED:
-                      reason = "The capture has failed due to an abortCaptures() call";
-                      break;
-                    default:
-                      reason = "Unknown reason";
-                  }
-                  result.error("captureFailure", reason, null);
-                }
-              },
+              mSessionCaptureCallback,
               null);
     } catch (CameraAccessException e) {
-      result.error("cameraAccess", e.getMessage(), null);
+      //result.error("cameraAccess", e.getMessage(), null);
     }
   }
+
+  private void unlockFocus(){
+    try {
+      final CaptureRequest.Builder captureBuilder =
+              cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+      captureBuilder.addTarget(pictureImageReader.getSurface());
+      captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getMediaOrientation());
+
+      mState = STATE_PREVIEW;
+      //captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_AUTO);
+      captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_CANCEL);
+
+
+      cameraCaptureSession.capture(
+              captureBuilder.build(),
+              mSessionCaptureCallback,
+              null);
+    } catch (CameraAccessException e) {
+      //result.error("cameraAccess", e.getMessage(), null);
+    }
+  }
+
 
   private void createCaptureSession(int templateType, Surface... surfaces)
       throws CameraAccessException {
