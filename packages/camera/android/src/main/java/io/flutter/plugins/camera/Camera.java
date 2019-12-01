@@ -18,6 +18,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureFailure;
 import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.MeteringRectangle;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.CamcorderProfile;
@@ -332,13 +333,31 @@ public class Camera {
       captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_AUTO);
 
 
-
-
-
+      cameraCaptureSession.stopRepeating();
+      //Now add a new AF trigger with focus region
+      captureBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, meteringRectangle);
+      captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+      captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
+      captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
 
       cameraCaptureSession.capture(
               captureBuilder.build(),
+
               new CameraCaptureSession.CaptureCallback() {
+
+                @Override
+                public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
+                  super.onCaptureCompleted(session, request, result);
+
+                  captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
+                  try {
+                    cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(), null, null);
+                  }catch (Exception e){
+                    Log.e(e.getMessage(), "onCaptureCompleted: ");
+                  }
+
+                }
+
                 @Override
                 public void onCaptureFailed(
                         @NonNull CameraCaptureSession session,
@@ -439,8 +458,8 @@ public class Camera {
               }
 
               //************************************************************
-              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
-                      CaptureRequest.CONTROL_AF_MODE_OFF);
+              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_OFF);
+              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
 
               MeteringRectangle[] areas = captureRequestBuilder.get(CaptureRequest.CONTROL_AF_REGIONS);
               for (MeteringRectangle area:areas) {
