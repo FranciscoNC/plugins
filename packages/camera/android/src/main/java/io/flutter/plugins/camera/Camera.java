@@ -299,7 +299,7 @@ public class Camera {
       }else{
         cameraCaptureSession.stopRepeating();
         captureRequestBuilder.set(
-                CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_OFF);
+                CaptureRequest.CONTROL_AF_MODE, CameraMetadata.CONTROL_AF_MODE_OFF);
         cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
       }
       result.success(null);
