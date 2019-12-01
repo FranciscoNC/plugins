@@ -293,12 +293,12 @@ public class Camera {
       cameraCaptureSession.stopRepeating();
       if(cerca){
         //Now add a new AF trigger with focus region
-        Rect newRect=new Rect(816 - 100,612 - 100,816 + 200,612 + 200);
+        /*Rect newRect=new Rect(816 - 100,612 - 100,816 + 200,612 + 200);
         MeteringRectangle[] meteringRectangle=new MeteringRectangle[1];
-        meteringRectangle[0]=new MeteringRectangle(newRect,METERING_WEIGHT_DONT_CARE);
+        meteringRectangle[0]=new MeteringRectangle(newRect,METERING_WEIGHT_DONT_CARE);*/
         //captureRequestBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, meteringRectangle);
-        /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_IDLE);
-        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CaptureRequest.CONTROL_AF_TRIGGER_START);*/
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_IDLE);
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CaptureRequest.CONTROL_AF_TRIGGER_START);
         captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
         //captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE,CaptureRequest.CONTROL_AE_MODE_ON);
         cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
@@ -310,10 +310,11 @@ public class Camera {
 
 
       }else{
-        Rect newRect=new Rect(0,0,3263,2447);
+        /*Rect newRect=new Rect(0,0,3263,2447);
         MeteringRectangle[] meteringRectangle=new MeteringRectangle[1];
-        meteringRectangle[0]=new MeteringRectangle(newRect,METERING_WEIGHT_DONT_CARE);
+        meteringRectangle[0]=new MeteringRectangle(newRect,METERING_WEIGHT_DONT_CARE);*/
 
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
         captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
         cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
 
