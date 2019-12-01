@@ -364,7 +364,13 @@ public class Camera {
 
     try {
       int resultafoHadrware = descr.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
+
       Log.e(resultafoHadrware+" ", "createCaptureSession: ");
+      float[] lensDistances = descr.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS);
+      for (float distance: lensDistances) {
+        Log.i(distance + " ", "createCaptureSession: ");
+      }
+
     }catch (Exception e){
       Log.e(e.getMessage(), "createCaptureSession: ");
     }
