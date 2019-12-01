@@ -318,13 +318,20 @@ public class Camera {
       captureBuilder.addTarget(pictureImageReader.getSurface());
       captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getMediaOrientation());
 
-      Rect newRect=new Rect(816,612,900,700);
+
+
+
+      captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_IDLE);
+      captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
+
+      Rect newRect=new Rect(816 - 100,612 - 100,816 + 200,612 + 200);
       MeteringRectangle[] meteringRectangle=new MeteringRectangle[1];
       meteringRectangle[0]=new MeteringRectangle(newRect,METERING_WEIGHT_DONT_CARE);
 
-      captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_AUTO);
       captureBuilder.set(CaptureRequest.CONTROL_AF_REGIONS,meteringRectangle);
-      captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_START);
+      captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_AUTO);
+
+
 
 
 
@@ -433,7 +440,7 @@ public class Camera {
 
               //************************************************************
               captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
-                      CaptureRequest.CONTROL_AF_MODE_AUTO);
+                      CaptureRequest.CONTROL_AF_MODE_OFF);
 
               MeteringRectangle[] areas = captureRequestBuilder.get(CaptureRequest.CONTROL_AF_REGIONS);
               for (MeteringRectangle area:areas) {
