@@ -136,6 +136,11 @@ final class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
           result.success(null);
           break;
         }
+      case "ajustarFoco":
+        camera.ajustarFoco(call.argument("cerca"),result);
+        break;
+
+
       default:
         result.notImplemented();
         break;

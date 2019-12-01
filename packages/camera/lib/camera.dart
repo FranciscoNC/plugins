@@ -396,6 +396,10 @@ class CameraController extends ValueNotifier<CameraValue> {
     }
   }
 
+  Future<void> ajustarFoco(bool cerca) async{
+    await _channel.invokeMethod<dynamic>('ajustarFoco',<String, dynamic>{'cerca': cerca});
+  }
+
   /// Start streaming images from platform camera.
   ///
   /// Settings for capturing images on iOS and Android is set to always use the

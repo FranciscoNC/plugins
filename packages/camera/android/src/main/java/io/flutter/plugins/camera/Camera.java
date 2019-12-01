@@ -280,13 +280,42 @@ public class Camera {
                     default:
                       reason = "Unknown reason";
                   }
-                  result.error("captureFailure", reason, null);
                 }
               },
               null);
     } catch (CameraAccessException e) {
       result.error("cameraAccess", e.getMessage(), null);
     }
+  }
+
+  public void ajustarFoco(boolean cerca,@NonNull final Result result){
+    try {
+      cameraCaptureSession.stopRepeating();
+      if(cerca){
+        cameraCaptureSession.stopRepeating();
+        //Now add a new AF trigger with focus region
+        Rect newRect=new Rect(816 - 100,612 - 100,816 + 200,612 + 200);
+        MeteringRectangle[] meteringRectangle=new MeteringRectangle[1];
+        meteringRectangle[0]=new MeteringRectangle(newRect,METERING_WEIGHT_DONT_CARE);
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, meteringRectangle);
+        captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
+        cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
+
+        
+      }else{
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
+        cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
+      }
+
+      result.success(null);
+
+    }catch (Exception e){
+      result.error("focus error",e.getMessage(),null);
+    }
+
   }
 
   public void getPicture(@NonNull final Result result) {
@@ -334,6 +363,7 @@ public class Camera {
 
 
       cameraCaptureSession.stopRepeating();
+
       //Now add a new AF trigger with focus region
       captureBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, meteringRectangle);
       captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
