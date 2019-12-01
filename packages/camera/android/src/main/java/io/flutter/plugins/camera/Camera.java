@@ -16,6 +16,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureFailure;
 import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.params.MeteringRectangle;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.CamcorderProfile;
 import android.media.Image;
@@ -317,7 +318,7 @@ public class Camera {
 
       captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
       captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_START);
-      
+
       cameraCaptureSession.capture(
               captureBuilder.build(),
               new CameraCaptureSession.CaptureCallback() {
@@ -367,6 +368,7 @@ public class Camera {
 
     try {
       int resultafoHadrware = descr.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
+
 
       Log.e(resultafoHadrware+" ", "createCaptureSession: ");
       float[] lensDistances = descr.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS);
@@ -422,6 +424,11 @@ public class Camera {
               //************************************************************
               captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
                       CaptureRequest.CONTROL_AF_MODE_OFF);
+              MeteringRectangle[] areas = captureRequestBuilder.get(CaptureRequest.CONTROL_AF_REGIONS);
+
+              for (MeteringRectangle area:areas) {
+                Log.i("("+area.getX()+","+area.getY()+"),"+area.getWidth()+"x"+area.getHeight(), "onConfigured: ");
+              }
 
               /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
                       CameraMetadata.CONTROL_AF_TRIGGER_START);*/
