@@ -446,6 +446,8 @@ public class Camera {
               //captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_OFF);
               //************************************************************
 
+
+
               cameraCaptureSession = session;
               /*captureRequestBuilder.set(
                   CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);*/
@@ -553,7 +555,7 @@ public class Camera {
   }
 
   public void startPreview() throws CameraAccessException {
-    createCaptureSession(CameraDevice.TEMPLATE_PREVIEW, pictureImageReader.getSurface());
+    createCaptureSession(CameraDevice.TEMPLATE_MANUAL, pictureImageReader.getSurface());
   }
 
   public void startPreviewWithImageStream(EventChannel imageStreamChannel)
