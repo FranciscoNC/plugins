@@ -293,9 +293,16 @@ public class Camera {
       //cameraCaptureSession.stopRepeating();
       if(cerca){
         cameraCaptureSession.stopRepeating();
-        captureRequestBuilder.set(
-                CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+        /*captureRequestBuilder.set(
+                CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);*/
+
+        /*Rect rect = new Rect();
+        MeteringRectangle rect = new MeteringRectangle();
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AF_REGIONS,);*/
+
         cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,null);
+
+
       }else{
         cameraCaptureSession.stopRepeating();
         captureRequestBuilder.set(
@@ -555,7 +562,7 @@ public class Camera {
   }
 
   public void startPreview() throws CameraAccessException {
-    createCaptureSession(CameraDevice.TEMPLATE_MANUAL, pictureImageReader.getSurface());
+    createCaptureSession(CameraDevice.TEMPLATE_PREVIEW, pictureImageReader.getSurface());
   }
 
   public void startPreviewWithImageStream(EventChannel imageStreamChannel)
