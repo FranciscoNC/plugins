@@ -447,12 +447,8 @@ public class Camera {
               //************************************************************
 
               cameraCaptureSession = session;
-              captureRequestBuilder.set(
-                  CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
-
-              captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_AUTO);
-              captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE,CaptureRequest.CONTROL_AE_MODE_ON);
-              captureRequestBuilder.set(CaptureRequest.CONTROL_AWB_MODE,CaptureRequest.CONTROL_AWB_MODE_AUTO);
+              /*captureRequestBuilder.set(
+                  CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);*/
 
               cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(), null, null);
               if (onSuccessCallback != null) {
