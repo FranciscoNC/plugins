@@ -167,7 +167,7 @@ final class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
             resolutionPreset,
             enableAudio);
 
-    camera.open(result);
+    camera.open(result,call.argument("autoFocus"));
   }
 
   // We move catching CameraAccessException out of onMethodCall because it causes a crash

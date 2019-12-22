@@ -67,6 +67,9 @@ public class Camera {
   private CamcorderProfile recordingProfile;
   private int currentOrientation = ORIENTATION_UNKNOWN;
 
+
+  private boolean autoFocus = false;
+
   // Mirrors camera.dart
   public enum ResolutionPreset {
     low,
@@ -150,8 +153,9 @@ public class Camera {
   }
 
   @SuppressLint("MissingPermission")
-  public void open(@NonNull final Result result) throws CameraAccessException {
+  public void open(@NonNull final Result result,boolean autofocus) throws CameraAccessException {
 
+    autoFocus = autofocus;
     pictureImageReader =
         ImageReader.newInstance(
             captureSize.getWidth(), captureSize.getHeight(), ImageFormat.JPEG, 2);
@@ -347,28 +351,6 @@ public class Camera {
       captureBuilder.addTarget(pictureImageReader.getSurface());
       captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getMediaOrientation());
 
-
-
-
-      /*captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_IDLE);
-      captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
-
-      Rect newRect=new Rect(816 - 100,612 - 100,816 + 200,612 + 200);
-      MeteringRectangle[] meteringRectangle=new MeteringRectangle[1];
-      meteringRectangle[0]=new MeteringRectangle(newRect,METERING_WEIGHT_DONT_CARE);
-
-      captureBuilder.set(CaptureRequest.CONTROL_AF_REGIONS,meteringRectangle);
-      captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_AUTO);
-
-
-      cameraCaptureSession.stopRepeating();
-
-      //Now add a new AF trigger with focus region
-      captureBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, meteringRectangle);
-      captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
-      captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
-      captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);*/
-
       cameraCaptureSession.capture(
               captureBuilder.build(),
 
@@ -447,7 +429,9 @@ public class Camera {
               }
 
               //************************************************************
-              Log.i("Hola", "******** onConfigured: ");
+              if(!autoFocus){
+                captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_OFF);
+              }
               /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_IDLE);
               captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_AUTO);*/
               //captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_OFF);
