@@ -352,7 +352,7 @@ public class Camera {
       captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getMediaOrientation());
 
       if(!autoFocus){
-        captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_OFF);
+        captureBuilder.set(CaptureRequest.CONTROL_MODE,CaptureRequest.CONTROL_MODE_OFF);
       }
 
       cameraCaptureSession.capture(
@@ -434,7 +434,7 @@ public class Camera {
 
               //************************************************************
               if(!autoFocus){
-                captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_OFF);
+                captureRequestBuilder.set(CaptureRequest.CONTROL_MODE,CaptureRequest.CONTROL_MODE_OFF);
               }
               /*captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_IDLE);
               captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_AUTO);*/
